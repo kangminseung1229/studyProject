@@ -5,13 +5,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class accountController {
+public class AccountController {
 
-    @GetMapping(value = {"/", "sign-up"})
+    @GetMapping(value = {"/", "/sign-up"})
     public String signUpForm(Model model){
-        System.out.println("test");
+        model.addAttribute(new SignUpForm());
         return "account/sign-up";
     }
+
+    // @PostMapping("/sign-up")
+    // public String signUpSubmit()
+
     
 }
  

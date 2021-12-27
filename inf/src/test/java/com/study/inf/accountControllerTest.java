@@ -1,6 +1,7 @@
 
 package com.study.inf;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -25,7 +26,7 @@ public class accountControllerTest {
 
         mockMvc.perform(get("/sign-up"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("account/sign-up"));
-
+                .andExpect(view().name("account/sign-up"))
+                .andExpect(model().attributeDoesNotExist("SignUpForm"));
     }
 }
