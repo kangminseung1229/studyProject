@@ -18,7 +18,7 @@ public class SignUpFormValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
         // TODO Auto-generated method stub
-        return false;
+        return clazz.isAssignableFrom(SignUpForm.class);
     }
 
     @Override
