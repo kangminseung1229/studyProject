@@ -33,3 +33,7 @@ build/
 .vscode/
 
 application.properties
+local.txt
+server.txt
+
+static/

@@ -1,6 +1,7 @@
 package com.study.inf.account;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,8 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Account
@@ -20,6 +24,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(of = "id")
+@Builder @AllArgsConstructor @NoArgsConstructor
 public class Account {
 
     @Id @GeneratedValue
@@ -61,5 +66,9 @@ public class Account {
     private boolean studyUpdatedByEmail;
 
     private boolean studyUpdatedByWeb;
+
+    public void generateEmailCheckToken() { // RANDOM TOKEN 생성
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
     
 }

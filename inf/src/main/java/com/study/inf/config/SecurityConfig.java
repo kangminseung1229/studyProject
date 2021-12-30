@@ -19,7 +19,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         // TODO Auto-generated method stub
         http.authorizeRequests()
-            .mvcMatchers("/test").permitAll()
+            .mvcMatchers("/").permitAll()
             .mvcMatchers("/", "/login","/sign-up","/check-email", "/check-email-token",
                 "email-login", "check-email-login", "/login-link").permitAll()
             .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
