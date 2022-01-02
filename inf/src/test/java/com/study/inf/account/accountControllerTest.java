@@ -1,12 +1,13 @@
 
-package com.study.inf;
+package com.study.inf.account;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,10 @@ public class accountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private AccoutRepository accoutRepository;
+
 
     @DisplayName("회원가입 테스트")
     @Test
@@ -43,5 +48,20 @@ public class accountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/sign-up"));
 
+    }
+
+    @DisplayName("회원 가입 처리 - 입력값 정상")
+    @Test
+    void signUpSubmit_with_correct_input() throws Exception {
+        mockMvc.perform(post("sign-up")
+                .param("nicname", "keesun")
+                .param("email", "whelming25@naver.com")
+                .param("password", "1234523123")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection()) //redirecttion 응답
+                .andExpect(view().name("redirect:/"));
+
+
+        assertTrue(accoutRepository.existsByEmail("whelming25@naver.com"));
     }
 }
