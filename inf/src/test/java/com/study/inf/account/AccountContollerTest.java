@@ -1,30 +1,37 @@
 
 package com.study.inf.account;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class accountControllerTest {
-
+public class AccountContollerTest {
+    
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private AccoutRepository accoutRepository;
+
+    @MockBean //외부 연동은 모킹으로 한다.
+    JavaMailSender javaMailSender;
 
 
     @DisplayName("회원가입 테스트")
@@ -40,7 +47,7 @@ public class accountControllerTest {
     @DisplayName("회원 가입 처리 - 입력값 오류")
     @Test
     void signUpSubmit_with_wrong_input() throws Exception {
-        mockMvc.perform(post("sign-up")
+        mockMvc.perform(post("/sign-up")
                 .param("nicname", "keesun")
                 .param("email", "email..")
                 .param("password", "12345")
@@ -53,15 +60,17 @@ public class accountControllerTest {
     @DisplayName("회원 가입 처리 - 입력값 정상")
     @Test
     void signUpSubmit_with_correct_input() throws Exception {
-        mockMvc.perform(post("sign-up")
-                .param("nicname", "keesun")
-                .param("email", "whelming25@naver.com")
-                .param("password", "1234523123")
+        mockMvc.perform(post("/sign-up")
+                .param("nickname", "keesun")
+                .param("email", "keesun@email.com")
+                .param("password", "12345678")
                 .with(csrf()))
-                .andExpect(status().is3xxRedirection()) //redirecttion 응답
+                .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
+        assertTrue(accoutRepository.existsByEmail("keesun@email.com"));
+        //아무 타입의 객체를 호출해도 되는가
+        then(javaMailSender).should().send(any(SimpleMailMessage.class));
 
-        assertTrue(accoutRepository.existsByEmail("whelming25@naver.com"));
     }
 }
