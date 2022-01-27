@@ -73,6 +73,7 @@ public class AccountContollerTest {
         Account account =  accoutRepository.findByEmail("keesun@email.com");
         assertNotNull(account); // null 인지?
         assertNotEquals(account.getPassword(),"12345678");  //password가 불일치 할까 ? -> 인코딩됬나?
+        assertNotNull(account.getEmailCheckToken()); // null 인지?
         //아무 타입의 객체를 호출해도 되는가
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
 

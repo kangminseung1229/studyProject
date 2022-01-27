@@ -1,5 +1,9 @@
 package com.study.inf.account;
 
+import static org.mockito.Mockito.lenient;
+
+import java.time.LocalDateTime;
+
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,7 @@ public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
+    private final AccoutRepository accoutRepository;
 
     // 커스텀한 validator 를 적용한다.
     @InitBinder("signUpForm")
@@ -48,9 +53,29 @@ public class AccountController {
 
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
+    @GetMapping("/check-email-token")
+    public String checkEmailToken(String token, String email, Model model) {
+
+        Account account = accoutRepository.findByEmail(email);
+
+        String view = "account/checked-email";
+        if(account == null){
+            model.addAttribute("error", "wrong.email");
+            return  view;
+        }
+
+
+        //토큰값이 일치하지 않으면
+        if(!account.getEmailCheckToken().equals(token)){
+            model.addAttribute("error", "token");
+            return view;
+        }
+
+        account.setEmailVerified(true);
+        account.setJoinedAt(LocalDateTime.now());
+        model.addAttribute("numberOfUser", accoutRepository.count());
+        model.addAttribute("nickname", account.getNickname());
+            return  view;
     }
 
 }
