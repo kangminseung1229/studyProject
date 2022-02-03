@@ -22,7 +22,7 @@ public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
-    private final AccoutRepository accoutRepository;
+    private final AccountRepository accountRepository;
 
     // 커스텀한 validator 를 적용한다.
     @InitBinder("signUpForm")
@@ -48,7 +48,8 @@ public class AccountController {
         if (errors.hasErrors()) {
             return "account/sign-up";
         }
-        accountService.processNewAccount(signUpForm);
+            Account account =  accountService.processNewAccount(signUpForm);
+            accountService.login(account);
         return "redirect:/";
 
     }
@@ -56,7 +57,7 @@ public class AccountController {
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
 
-        Account account = accoutRepository.findByEmail(email);
+        Account account = accountRepository.findByEmail(email);
 
         String view = "account/checked-email";
         if(account == null){
@@ -66,14 +67,15 @@ public class AccountController {
 
 
         //토큰값이 일치하지 않으면
-        if(!account.getEmailCheckToken().equals(token)){
-            model.addAttribute("error", "token");
+        if(!account.isValidToken(token)){
+            model.addAttribute("error", "wrong.token");
             return view;
         }
 
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
-        model.addAttribute("numberOfUser", accoutRepository.count());
+        
+        account.completeSignUp();
+        accountService.login(account);
+        model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
             return  view;
     }

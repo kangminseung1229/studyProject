@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // private final 에 대하여 생성자를 만들어준다. 2.4.2 이후
 public class SignUpFormValidator implements Validator {
 
-    private final AccoutRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {

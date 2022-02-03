@@ -70,5 +70,14 @@ public class Account {
     public void generateEmailCheckToken() { // RANDOM TOKEN 생성
         this.emailCheckToken = UUID.randomUUID().toString();
     }
+
+    public boolean isValidToken(String token) {
+        return this.emailCheckToken.equals(token);
+    }
+
+    public void completeSignUp() {
+        this.setEmailVerified(true);
+        this.setJoinedAt(LocalDateTime.now());
+    }
     
 }
