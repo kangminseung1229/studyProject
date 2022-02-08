@@ -32,7 +32,7 @@ public class AccountController {
 
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "index";
     }
 
     @GetMapping("/sign-up")
