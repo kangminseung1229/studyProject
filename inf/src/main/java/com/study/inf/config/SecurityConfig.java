@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-/**
+/*
  * SecurityConfig
  */
 @Configuration
@@ -20,6 +20,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter{
         // TODO Auto-generated method stub
         http.authorizeRequests()
             .mvcMatchers("/").permitAll()
+            .mvcMatchers("/home").permitAll()
             .mvcMatchers("/", "/login","/sign-up","/check-email", "/check-email-token",
                 "email-login", "check-email-login", "/login-link").permitAll()
             .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
