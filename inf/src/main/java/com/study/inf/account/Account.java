@@ -42,6 +42,8 @@ public class Account {
 
     private String emailCheckToken;
 
+    private LocalDateTime emailCheckTokenGeneratedAt;
+
     private LocalDateTime joinedAt;
 
     private String bio;
@@ -69,6 +71,7 @@ public class Account {
 
     public void generateEmailCheckToken() { // RANDOM TOKEN 생성
         this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
 
     public boolean isValidToken(String token) {
@@ -78,6 +81,11 @@ public class Account {
     public void completeSignUp() {
         this.setEmailVerified(true);
         this.setJoinedAt(LocalDateTime.now());
+    }
+
+    //한시간이 지났나?
+    public boolean canSendConfirmEmail() {
+        return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
     
 }

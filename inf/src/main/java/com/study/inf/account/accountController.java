@@ -1,9 +1,5 @@
 package com.study.inf.account;
 
-import static org.mockito.Mockito.lenient;
-
-import java.time.LocalDateTime;
-
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -28,11 +24,6 @@ public class AccountController {
     @InitBinder("signUpForm")
     public void InitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(signUpFormValidator);
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "index";
     }
 
     @GetMapping("/sign-up")
@@ -77,7 +68,32 @@ public class AccountController {
         accountService.login(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
-            return  view;
+        return  view;
     }
+
+    //email check 권고 page
+    @GetMapping("/check-email")
+    public String checkEmail(@CurrentUser Account account, Model model) {
+        model.addAttribute("email", account.getEmail());
+        return "account/check-email";
+    }
+
+    //email 재전송
+    @GetMapping("resend-confirm-email")
+    public String resendConfirmEmail(@CurrentUser Account account, Model model){
+
+        //이메일을 보낼수 있는지 검사한다.
+        if (!account.canSendConfirmEmail()) {
+            model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
+            model.addAttribute("email", account.getEmail());
+            return "account/check-email";
+        }
+
+        accountService.sendSignUpConfirmEmail(account);
+
+        //새로고침 시 이메일을 계속 재전송 할 수 있기 때문에 redirect
+        return "redirect:/";
+    }
+
 
 }
