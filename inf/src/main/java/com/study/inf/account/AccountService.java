@@ -21,10 +21,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService implements UserDetailsService{
+public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender javaMailSender;
 
     public void sendSignUpConfirmEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -49,7 +49,6 @@ public class AccountService implements UserDetailsService{
         return newAccount;
     }
 
-
     @Transactional
     public Account processNewAccount(@Valid SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
@@ -60,16 +59,16 @@ public class AccountService implements UserDetailsService{
     }
 
     public void login(Account account) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(new UserAccount(account), account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        SecurityContext context =  SecurityContextHolder.getContext();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(new UserAccount(account),
+                account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
     }
 
-    
     @Override
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname);
-        
+
         if (account == null) {
             account = accountRepository.findByNickname(emailOrNickname);
         }

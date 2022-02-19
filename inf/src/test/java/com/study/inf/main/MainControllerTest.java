@@ -1,5 +1,16 @@
 package com.study.inf.main;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.study.inf.account.AccountRepository;
+import com.study.inf.account.AccountService;
+import com.study.inf.account.SignUpForm;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,17 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-
-import com.study.inf.account.AccountRepository;
-import com.study.inf.account.AccountService;
-import com.study.inf.account.SignUpForm;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,7 +32,9 @@ public class MainControllerTest {
     AccountService accountService;
     @Autowired
     AccountRepository accountRepository;
-
+    @MockBean // 외부 연동은 모킹으로 한다.
+    JavaMailSender javaMailSender;
+    
     @BeforeEach // 테스트 메소드 1개 실행 전 실행 -> 1개당 1개
     private void beforeEach() {
         SignUpForm signUpForm = new SignUpForm();
