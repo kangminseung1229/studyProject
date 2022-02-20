@@ -55,7 +55,7 @@ public class Account {
     private String location;
 
     @Lob @Basic(fetch = FetchType.EAGER)
-    private String profielImage;
+    private String profileImage;
 
     private boolean studyCreatedByEmail;
 

@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.study.inf.mail.ConsoleMailSender;
+
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,10 +22,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender javaMailSender;
+    // private final JavaMailSender javaMailSender;
+    private final ConsoleMailSender javaMailSender;
 
     public void sendSignUpConfirmEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -49,7 +52,7 @@ public class AccountService implements UserDetailsService {
         return newAccount;
     }
 
-    @Transactional
+    
     public Account processNewAccount(@Valid SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
@@ -66,6 +69,7 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true) // 읽기전용 트랜잭션 - 성능에 유리
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname);
 
@@ -79,4 +83,12 @@ public class AccountService implements UserDetailsService {
 
         return new UserAccount(account);
     }
+
+    public void completeSignUp(Account account) {
+        account.completeSignUp(); //영속성 컨텍스트에 의해 taransaction에 넣어주어야 한다. Transaction 은 service에서 위임한다.
+        login(account);
+        
+    }
+
+
 }

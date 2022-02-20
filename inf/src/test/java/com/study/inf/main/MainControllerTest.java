@@ -32,8 +32,6 @@ public class MainControllerTest {
     AccountService accountService;
     @Autowired
     AccountRepository accountRepository;
-    @MockBean // 외부 연동은 모킹으로 한다.
-    JavaMailSender javaMailSender;
     
     @BeforeEach // 테스트 메소드 1개 실행 전 실행 -> 1개당 1개
     private void beforeEach() {
