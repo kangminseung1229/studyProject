@@ -3,8 +3,10 @@ package com.study.inf.settings;
 import com.study.inf.account.Account;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Profile {
 
     private String bio;

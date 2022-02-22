@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.study.inf.mail.ConsoleMailSender;
+import com.study.inf.settings.Profile;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -88,6 +89,14 @@ public class AccountService implements UserDetailsService {
         account.completeSignUp(); //영속성 컨텍스트에 의해 taransaction에 넣어주어야 한다. Transaction 은 service에서 위임한다.
         login(account);
         
+    }
+
+    public void updateProfile(Account account, @Valid Profile profile) {
+        account.setUrl(profile.getUrl());
+        account.setOccupation(profile.getOccupation());
+        account.setLocation(profile.getLocation());
+        account.setBio(profile.getBio());
+        accountRepository.save(account);
     }
 
 
