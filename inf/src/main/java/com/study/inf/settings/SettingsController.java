@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class SettingsController {
 
 
-    private static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    private static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/settings/profile";
     
     private final AccountService accountService;
 

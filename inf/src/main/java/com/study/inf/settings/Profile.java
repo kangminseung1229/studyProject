@@ -2,6 +2,8 @@ package com.study.inf.settings;
 
 import com.study.inf.account.Account;
 
+import org.hibernate.validator.constraints.Length;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Profile {
 
+
+    @Length(max=50)
     private String bio;
     
     private String url;
