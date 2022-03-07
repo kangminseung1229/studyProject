@@ -2,13 +2,18 @@ package com.study.inf.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 // import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 // import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 // import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.study.inf.account.Account;
 import com.study.inf.account.AccountRepository;
@@ -20,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -34,6 +40,9 @@ public class SettingsControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     // bug로 안된다고 가정 시.
@@ -51,6 +60,7 @@ public class SettingsControllerTest {
     
     @AfterEach
     void AfterEach(){
+        System.out.println("<=================전체삭제 실행=================>" );
         accountRepository.deleteAll();
     }
     
@@ -108,5 +118,42 @@ public class SettingsControllerTest {
             Account keesun = accountRepository.findByNickname("keesun");
             assertNull(keesun.getBio());
 
+    }
+
+    @WithAccount("keesun")
+    @DisplayName("패스워드 수정 - 입력값 정상")
+    @Test
+    void updatePassword_success() throws Exception {
+
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+            .param("newPassword", "1234545678")
+            .param("newPasswordConfirm", "1234545678")
+            .with(csrf())
+        )
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(SettingsController.SETTINGS_PASSWORD_URL))
+            .andExpect(flash().attributeExists("message"));
+
+        
+        Account keesun = accountRepository.findByNickname("keesun");
+        assertTrue(passwordEncoder.matches("1234545678", keesun.getPassword()));
+    }
+
+    @WithAccount("keesun")
+    @DisplayName("패스워드 수정 - 입력값 에러 - 패스워드 불일치")
+    @Test
+    void updatePassword_fail() throws Exception{
+
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+            .param("newPassword", "1234545678")
+            .param("newPasswordConfirm", "123213123")
+            .with(csrf())
+        )
+            .andExpect(status().isOk())
+            .andExpect(view().name(SettingsController.SETTINGS_PASSWORD_VIEW_NAME))
+            .andExpect(model().hasErrors())
+            .andExpect(model().attributeExists("passwordForm"))
+            .andExpect(model().attributeExists("account"));
+        
     }
 }
