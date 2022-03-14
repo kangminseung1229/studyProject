@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.study.inf.mail.ConsoleMailSender;
+import com.study.inf.settings.Notifications;
 import com.study.inf.settings.Profile;
 
 import org.springframework.mail.SimpleMailMessage;
@@ -103,6 +104,19 @@ public class AccountService implements UserDetailsService {
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
+    }
+
+    public void updateNotification(Account account, Notifications notifications) {
+
+        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
+        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+        
+        accountRepository.save(account);
+
     }
 
 
