@@ -8,6 +8,7 @@ import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.Notifications;
 import com.study.inf.settings.Profile;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,6 +31,7 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     // private final JavaMailSender javaMailSender;
     private final ConsoleMailSender javaMailSender;
+    private final ModelMapper modelMapper;
 
     public void sendSignUpConfirmEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -93,27 +95,34 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, @Valid Profile profile) {
-        account.setUrl(profile.getUrl());
-        account.setOccupation(profile.getOccupation());
-        account.setLocation(profile.getLocation());
-        account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());
+
+        modelMapper.map(profile, account); // 아래 대체
+
+        // account.setUrl(profile.getUrl());
+        // account.setOccupation(profile.getOccupation());
+        // account.setLocation(profile.getLocation());
+        // account.setBio(profile.getBio());
+        // account.setProfileImage(profile.getProfileImage());
+
+
         accountRepository.save(account);
     }
 
-    public void updatePassword(Account account, String newPassword) {
+    public void updatePassword(Account account, String newPassword) { 
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
     }
 
     public void updateNotification(Account account, Notifications notifications) {
 
-        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
-        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
-        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
-        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
-        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
-        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+        modelMapper.map(notifications, account);
+
+        // account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        // account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        // account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+        // account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        // account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
+        // account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
         
         accountRepository.save(account);
 

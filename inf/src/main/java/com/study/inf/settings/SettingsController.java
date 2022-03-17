@@ -7,6 +7,7 @@ import com.study.inf.account.Account;
 import com.study.inf.account.AccountService;
 import com.study.inf.account.CurrentUser;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -26,26 +27,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SettingsController {
 
-    @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new PasswordFormValidator());
-    }
-
+    
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
     static final String SETTINGS_PROFILE_URL = "/settings/profile";
     static final String SETTINGS_PASSWORD_VIEW_NAME = "/settings/password";
     static final String SETTINGS_PASSWORD_URL = "/settings/password";
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
     static final String SETTINGS_NOTIFICATIONS_URL = "settings/notifications";
-
-
+    
     private final AccountService accountService;
+
+    private final ModelMapper modelMapper; // controller 는 빈에 등록되어 있으니 주입받을 수 있고, new 생성자 클래스에서는 빈에 등록되어 있지 않기 때문에 주입 받을 수 없다.
+
+    @InitBinder("passwordForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new PasswordFormValidator());
+    }
+
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
 
         model.addAttribute(account);
-        model.addAttribute(new Profile(account));
+        // model.addAttribute(new Profile(account));
+        model.addAttribute(modelMapper.map(account, Profile.class));
 
         return SETTINGS_PROFILE_VIEW_NAME;
 
@@ -92,7 +97,9 @@ public class SettingsController {
     @GetMapping(SETTINGS_NOTIFICATIONS_URL)
     public String updateNotificationsForm(@CurrentUser Account account, Model model){
         model.addAttribute(account);
-        model.addAttribute(new Notifications(account));
+        // model.addAttribute(new Notifications(account));
+        model.addAttribute(modelMapper.map(account, Notifications.class));
+
         return SETTINGS_NOTIFICATIONS_VIEW_NAME;
     }
 
@@ -107,7 +114,7 @@ public class SettingsController {
 
         accountService.updateNotification(account,notifications);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
-        return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
+        return "redirect:/" + SETTINGS_NOTIFICATIONS_URL;
         
 
     }

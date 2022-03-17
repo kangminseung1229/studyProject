@@ -69,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // static folder는 시큐리티 체인에 해당되지 않는다.
         web.ignoring()
                 .mvcMatchers("/node_modules/**")
+                .mvcMatchers("/error")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 
     }
