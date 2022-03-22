@@ -1,4 +1,8 @@
-package com.study.inf.settings;
+package com.study.inf.settings.validator;
+
+
+
+import com.study.inf.settings.forms.PasswordForm;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

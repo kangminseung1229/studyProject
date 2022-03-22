@@ -1,4 +1,4 @@
-package com.study.inf.settings;
+package com.study.inf.settings.validator;
 
 import org.hibernate.validator.constraints.Length;
 

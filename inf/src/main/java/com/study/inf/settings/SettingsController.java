@@ -1,13 +1,19 @@
 package com.study.inf.settings;
 
-import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
 import com.study.inf.account.Account;
 import com.study.inf.account.AccountService;
 import com.study.inf.account.CurrentUser;
+import com.study.inf.settings.forms.NicknameForm;
+import com.study.inf.settings.forms.Notifications;
+import com.study.inf.settings.forms.PasswordForm;
+import com.study.inf.settings.validator.NicknameValidator;
+import com.study.inf.settings.validator.PasswordFormValidator;
+import com.study.inf.settings.validator.Profile;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer.RedirectionEndpointConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,19 +35,28 @@ public class SettingsController {
 
     
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/settings/profile";
-    static final String SETTINGS_PASSWORD_VIEW_NAME = "/settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
+    static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
-    static final String SETTINGS_NOTIFICATIONS_URL = "settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
+    static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account"; 
+    static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
     
     private final AccountService accountService;
 
     private final ModelMapper modelMapper; // controller 는 빈에 등록되어 있으니 주입받을 수 있고, new 생성자 클래스에서는 빈에 등록되어 있지 않기 때문에 주입 받을 수 없다.
 
+    private final NicknameValidator nicknameValidator;
+
     @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
+    public void passwordFormInitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(new PasswordFormValidator());
+    }
+
+    @InitBinder("nicknameForm")
+    public void nicknameFormInitBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(nicknameValidator);
     }
 
 
@@ -118,6 +133,27 @@ public class SettingsController {
         
 
     }
+
+    @GetMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccountForm(@CurrentUser Account account, Model model){
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        return SETTINGS_ACCOUNT_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors, Model model, RedirectAttributes attributes){
+        
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_ACCOUNT_VIEW_NAME;
+        }
+
+        accountService.updateNickname(account, nicknameForm.getNickname());
+        attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
+        return "redirect:" + SETTINGS_ACCOUNT_URL;
+    }
+
 
 
 }

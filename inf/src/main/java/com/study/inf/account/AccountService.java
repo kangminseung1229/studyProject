@@ -5,8 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.study.inf.mail.ConsoleMailSender;
-import com.study.inf.settings.Notifications;
-import com.study.inf.settings.Profile;
+import com.study.inf.settings.forms.Notifications;
+import com.study.inf.settings.validator.Profile;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -126,6 +126,13 @@ public class AccountService implements UserDetailsService {
         
         accountRepository.save(account);
 
+    }
+
+    public void updateNickname(Account account, String nickname) {
+
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
     }
 
 
