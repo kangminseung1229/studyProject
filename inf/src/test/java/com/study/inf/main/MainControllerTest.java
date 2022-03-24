@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.study.inf.account.AccountRepository;
 import com.study.inf.account.AccountService;
-import com.study.inf.account.SignUpForm;
+import com.study.inf.account.form.SignUpForm;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,7 @@
 package com.study.inf.account;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Basic;
@@ -10,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+
+import com.study.inf.domain.Tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,6 +72,9 @@ public class Account {
     private boolean studyUpdatedByEmail;
 
     private boolean studyUpdatedByWeb = true;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
     public void generateEmailCheckToken() { // RANDOM TOKEN 생성
         this.emailCheckToken = UUID.randomUUID().toString();

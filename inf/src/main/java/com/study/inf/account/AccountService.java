@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.study.inf.account.form.SignUpForm;
 import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.validator.Profile;

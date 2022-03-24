@@ -1,4 +1,4 @@
-package com.study.inf.account;
+package com.study.inf.account.form;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

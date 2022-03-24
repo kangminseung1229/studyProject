@@ -1,7 +1,7 @@
 package com.study.inf.settings;
 
 import com.study.inf.account.AccountService;
-import com.study.inf.account.SignUpForm;
+import com.study.inf.account.form.SignUpForm;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,7 @@
-package com.study.inf.account;
+package com.study.inf.account.validator;
+
+import com.study.inf.account.AccountRepository;
+import com.study.inf.account.form.SignUpForm;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

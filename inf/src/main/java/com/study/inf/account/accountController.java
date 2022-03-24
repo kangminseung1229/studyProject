@@ -2,6 +2,9 @@ package com.study.inf.account;
 
 import javax.validation.Valid;
 
+import com.study.inf.account.form.SignUpForm;
+import com.study.inf.account.validator.SignUpFormValidator;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
