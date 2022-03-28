@@ -1,10 +1,12 @@
 package com.study.inf.account;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.study.inf.account.form.SignUpForm;
+import com.study.inf.domain.Tag;
 import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.validator.Profile;
@@ -143,6 +145,12 @@ public class AccountService implements UserDetailsService {
         mailMessage.setSubject("스터디올래, 로그인 링크");
         mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() + "&email=" + account.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+       Optional<Account> byId =  accountRepository.findById(account.getId());
+       byId.ifPresent(a -> a.getTags().add(tag));
+       //getOne -> Lazy
     }
 
 

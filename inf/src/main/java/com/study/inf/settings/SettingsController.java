@@ -5,14 +5,18 @@ import javax.validation.Valid;
 import com.study.inf.account.Account;
 import com.study.inf.account.AccountService;
 import com.study.inf.account.CurrentUser;
+import com.study.inf.domain.Tag;
 import com.study.inf.settings.forms.NicknameForm;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.forms.PasswordForm;
+import com.study.inf.settings.forms.TagForm;
 import com.study.inf.settings.validator.NicknameValidator;
 import com.study.inf.settings.validator.PasswordFormValidator;
 import com.study.inf.settings.validator.Profile;
+import com.study.inf.tag.TagRepository;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
@@ -46,10 +52,9 @@ public class SettingsController {
     static final String SETTINGS_TAGS_URL =  "/" + SETTINGS_TAGS_VIEW_NAME;
     
     private final AccountService accountService;
-
     private final ModelMapper modelMapper; // controller 는 빈에 등록되어 있으니 주입받을 수 있고, new 생성자 클래스에서는 빈에 등록되어 있지 않기 때문에 주입 받을 수 없다.
-
     private final NicknameValidator nicknameValidator;
+    private final TagRepository tagRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -141,6 +146,31 @@ public class SettingsController {
         model.addAttribute(account);
         return SETTINGS_TAGS_VIEW_NAME;
     }
+    
+    @PostMapping("/settings/tags/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+
+        //account 는 현재 datached 
+        // ManyToMany 의  기본 전략은 LAZY 기본전략
+        // 하지만 LAZY 도 detached에선 가져올 수 없다.
+
+        String title = tagForm.getTagTitle();
+        
+        Tag tag = tagRepository.findByTitle(title).orElseGet(()-> tagRepository.save(Tag.builder()
+                    .title(tagForm.getTagTitle())
+                    .build()
+        ));
+        // Tag tag = tagRepository.findbyTitle(title);
+        // if (tag == null){
+        //     tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        // }
+
+        accountService.addTag(account,tag);
+        
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccountForm(@CurrentUser Account account, Model model){
