@@ -2,6 +2,7 @@ package com.study.inf.account;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -151,6 +152,17 @@ public class AccountService implements UserDetailsService {
        Optional<Account> byId =  accountRepository.findById(account.getId());
        byId.ifPresent(a -> a.getTags().add(tag));
        //getOne -> Lazy
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTags();
+    }
+
+    public void removeTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().remove(tag));
+
     }
 
 
