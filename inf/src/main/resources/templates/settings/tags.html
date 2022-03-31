@@ -19,6 +19,8 @@
                             또는 엔터를 입력하세요.
                         </div>
 
+                        <div id="whitelist" th:text="${whitelist}" hidden></div>
+
                         <!-- List<Stirng> tags = List.of("AAA","BBB", "CCC") => AAA,BBB,CCC -->
                         <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(tags,',')}" class="tagify-outside" aria-describedby="tagHelp"/>
                     </div>
@@ -35,7 +37,7 @@
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             });
         });
-    </script>
+    </script>  
     <script type="application/javascript">
         $(function () {
             function tagRequest(url, tagTitle) {
@@ -66,6 +68,7 @@
 
             var tagify = new Tagify(tagInput, {
                 pattern: /^.{0,20}$/,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
                 dropdown : {
                     enabled: 1, // suggest tags after a single character input
                 } // map tags
