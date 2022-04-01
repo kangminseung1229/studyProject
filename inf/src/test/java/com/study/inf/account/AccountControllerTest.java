@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +27,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.study.inf.domain.Account;
+import com.study.inf.mail.ConsoleMailSender;
+
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@Slf4j
 public class AccountControllerTest {
 
     @Autowired
@@ -38,8 +41,11 @@ public class AccountControllerTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    @MockBean // 외부 연동은 모킹으로 한다.
-    JavaMailSender javaMailSender;
+    // @MockBean // 외부 연동은 모킹으로 한다.
+    // JavaMailSender javaMailSender;
+
+    @MockBean
+    ConsoleMailSender javaMailSender;
 
     @DisplayName("인증 메일 확인 - 입력값 오류")
     @Test

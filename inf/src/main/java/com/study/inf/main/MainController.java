@@ -1,7 +1,7 @@
 package com.study.inf.main;
 
-import com.study.inf.account.Account;
 import com.study.inf.account.CurrentUser;
+import com.study.inf.domain.Account;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

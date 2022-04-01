@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import com.study.inf.account.form.SignUpForm;
+import com.study.inf.domain.Account;
 import com.study.inf.domain.Tag;
 import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.forms.Notifications;
@@ -48,24 +49,17 @@ public class AccountService implements UserDetailsService {
     }
 
     private Account saveNewAccount(@Valid SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .studyCreatedByWeb(true)
-                .studyEnrollmentResultByWeb(true)
-                .studyUpdatedByWeb(true)
-                .build();
-        Account newAccount = accountRepository.save(account);
-        return newAccount;
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailCheckToken();
+
+        return accountRepository.save(account);
     }
 
     
     public Account processNewAccount(@Valid SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
-
         return newAccount;
     }
 

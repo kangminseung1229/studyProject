@@ -1,4 +1,4 @@
-package com.study.inf.account;
+package com.study.inf.domain;
 
 import lombok.Getter;
 import lombok.Setter;

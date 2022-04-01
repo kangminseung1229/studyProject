@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.study.inf.account.form.SignUpForm;
 import com.study.inf.account.validator.SignUpFormValidator;
+import com.study.inf.domain.Account;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

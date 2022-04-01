@@ -1,5 +1,7 @@
 package com.study.inf.account;
 
+import com.study.inf.domain.Account;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

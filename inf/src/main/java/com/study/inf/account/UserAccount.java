@@ -2,6 +2,8 @@ package com.study.inf.account;
 
 import java.util.List;
 
+import com.study.inf.domain.Account;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 

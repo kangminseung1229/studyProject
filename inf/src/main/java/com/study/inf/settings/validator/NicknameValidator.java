@@ -2,8 +2,8 @@ package com.study.inf.settings.validator;
 
 import static org.mockito.Mockito.ignoreStubs;
 
-import com.study.inf.account.Account;
 import com.study.inf.account.AccountRepository;
+import com.study.inf.domain.Account;
 import com.study.inf.settings.forms.NicknameForm;
 
 import org.springframework.stereotype.Component;

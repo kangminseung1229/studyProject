@@ -10,9 +10,9 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.inf.account.Account;
 import com.study.inf.account.AccountService;
 import com.study.inf.account.CurrentUser;
+import com.study.inf.domain.Account;
 import com.study.inf.domain.Tag;
 import com.study.inf.settings.forms.NicknameForm;
 import com.study.inf.settings.forms.Notifications;
@@ -26,6 +26,7 @@ import com.study.inf.tag.TagRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -77,7 +78,6 @@ public class SettingsController {
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
-
         model.addAttribute(account);
         // model.addAttribute(new Profile(account));
         model.addAttribute(modelMapper.map(account, Profile.class));
@@ -149,14 +149,13 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTags(@CurrentUser Account account, Model model) throws JsonProcessingException{
+    public String updateTags(@CurrentUser Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
 
         List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
         model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
-        
 
         return SETTINGS_TAGS_VIEW_NAME;
     }
@@ -171,13 +170,14 @@ public class SettingsController {
 
         String title = tagForm.getTagTitle();
 
-        // Tag tag = tagRepository.findByTitle(title).orElseGet(() -> tagRepository.save(Tag.builder()
-        //         .title(tagForm.getTagTitle())
-        //         .build()));
+        // Tag tag = tagRepository.findByTitle(title).orElseGet(() ->
+        // tagRepository.save(Tag.builder()
+        // .title(tagForm.getTagTitle())
+        // .build()));
 
         Tag tag = tagRepository.findByTitle(title);
-        if (tag == null){
-        tag = tagRepository.save(Tag.builder().title(title).build());
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(title).build());
         }
 
         accountService.addTag(account, tag);
