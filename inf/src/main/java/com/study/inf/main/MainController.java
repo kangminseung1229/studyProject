@@ -1,6 +1,6 @@
 package com.study.inf.main;
 
-import com.study.inf.account.CurrentUser;
+import com.study.inf.account.CurrentAccount;
 import com.study.inf.domain.Account;
 
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/")
-    public String home(@CurrentUser Account account, Model model) {
+    public String home(@CurrentAccount Account account, Model model) {
 
         if (account != null) {
             model.addAttribute(account);

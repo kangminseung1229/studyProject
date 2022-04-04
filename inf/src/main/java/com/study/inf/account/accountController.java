@@ -77,14 +77,14 @@ public class AccountController {
 
     //email check 권고 page
     @GetMapping("/check-email")
-    public String checkEmail(@CurrentUser Account account, Model model) {
+    public String checkEmail(@CurrentAccount Account account, Model model) {
         model.addAttribute("email", account.getEmail());
         return "account/check-email";
     }
 
     //email 재전송
     @GetMapping("resend-confirm-email")
-    public String resendConfirmEmail(@CurrentUser Account account, Model model){
+    public String resendConfirmEmail(@CurrentAccount Account account, Model model){
 
         //이메일을 보낼수 있는지 검사한다.
         if (!account.canSendConfirmEmail()) {
@@ -100,7 +100,7 @@ public class AccountController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account){
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account){
         Account byNickname =  accountRepository.findByNickname(nickname);
 
         if (nickname == null){
