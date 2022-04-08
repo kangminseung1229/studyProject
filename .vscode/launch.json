@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DdpLibraryApplication<InfApplication>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "mainClass": "com.study.inf.InfApplication",
+            "projectName": "inf",
+            "args": "--spring.profiles.active=dev"
+        }
+    ]
+}

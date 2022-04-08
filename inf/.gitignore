@@ -33,6 +33,8 @@ build/
 .vscode/
 
 application.properties
+application-dev.properties
+launch.json
 local.txt
 server.txt
 
