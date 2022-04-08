@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import com.study.inf.account.form.SignUpForm;
 import com.study.inf.domain.Account;
 import com.study.inf.domain.Tag;
+import com.study.inf.domain.Zone;
 import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.validator.Profile;
@@ -56,7 +57,6 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
-    
     public Account processNewAccount(@Valid SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         sendSignUpConfirmEmail(newAccount);
@@ -87,9 +87,9 @@ public class AccountService implements UserDetailsService {
     }
 
     public void completeSignUp(Account account) {
-        account.completeSignUp(); //영속성 컨텍스트에 의해 taransaction에 넣어주어야 한다. Transaction 은 service에서 위임한다.
+        account.completeSignUp(); // 영속성 컨텍스트에 의해 taransaction에 넣어주어야 한다. Transaction 은 service에서 위임한다.
         login(account);
-        
+
     }
 
     public void updateProfile(Account account, @Valid Profile profile) {
@@ -102,11 +102,10 @@ public class AccountService implements UserDetailsService {
         // account.setBio(profile.getBio());
         // account.setProfileImage(profile.getProfileImage());
 
-
         accountRepository.save(account);
     }
 
-    public void updatePassword(Account account, String newPassword) { 
+    public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
     }
@@ -121,7 +120,7 @@ public class AccountService implements UserDetailsService {
         // account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
         // account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
         // account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
-        
+
         accountRepository.save(account);
 
     }
@@ -133,7 +132,7 @@ public class AccountService implements UserDetailsService {
         login(account);
     }
 
-    public void sendLoginLink(Account account){
+    public void sendLoginLink(Account account) {
         account.generateEmailCheckToken();
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(account.getEmail());
@@ -143,9 +142,9 @@ public class AccountService implements UserDetailsService {
     }
 
     public void addTag(Account account, Tag tag) {
-       Optional<Account> byId =  accountRepository.findById(account.getId());
-       byId.ifPresent(a -> a.getTags().add(tag));
-       //getOne -> Lazy
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
+        // getOne -> Lazy
     }
 
     public Set<Tag> getTags(Account account) {
@@ -159,5 +158,27 @@ public class AccountService implements UserDetailsService {
 
     }
 
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
+    }
+
+    public Account getAccount(String nickname) {
+        Account account = accountRepository.findByNickname(nickname);
+        if (account == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        return account;
+    }
 
 }
