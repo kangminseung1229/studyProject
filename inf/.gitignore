@@ -39,3 +39,4 @@ local.txt
 server.txt
 
 static/
+!package.json
