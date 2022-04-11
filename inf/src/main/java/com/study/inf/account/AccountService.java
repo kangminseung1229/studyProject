@@ -10,12 +10,12 @@ import com.study.inf.account.form.SignUpForm;
 import com.study.inf.domain.Account;
 import com.study.inf.domain.Tag;
 import com.study.inf.domain.Zone;
-import com.study.inf.mail.ConsoleMailSender;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.validator.Profile;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -35,8 +35,8 @@ import lombok.RequiredArgsConstructor;
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    // private final JavaMailSender javaMailSender;
-    private final ConsoleMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+    // private final ConsoleMailSender javaMailSender;
     private final ModelMapper modelMapper;
 
     public void sendSignUpConfirmEmail(Account newAccount) {
