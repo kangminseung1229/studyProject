@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,10 +12,9 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
-
-// @Profile("local") //application.properties 에서 로컬일때만 빈 등록을 함.
 @Component
 @Slf4j
+@Profile("local")
 public class ConsoleMailSender implements JavaMailSender {
 
     @Override
