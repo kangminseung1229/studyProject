@@ -1,38 +1,37 @@
 
 package com.study.inf.account;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
-
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.study.inf.domain.Account;
-import com.study.inf.mail.ConsoleMailSender;
+import com.study.inf.mail.EmailMessage;
+import com.study.inf.mail.EmailService;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("dev")
 public class AccountControllerTest {
 
     @Autowired
@@ -41,11 +40,8 @@ public class AccountControllerTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    // @MockBean // 외부 연동은 모킹으로 한다.
-    // JavaMailSender javaMailSender;
-
     @MockBean
-    ConsoleMailSender javaMailSender;
+    EmailService emailService;
 
     @DisplayName("인증 메일 확인 - 입력값 오류")
     @Test
@@ -126,7 +122,7 @@ public class AccountControllerTest {
         assertNotEquals(account.getPassword(),"12345678");  //password가 불일치 할까 ? -> 인코딩됬나?
         assertNotNull(account.getEmailCheckToken()); // null 인지?
         //아무 타입의 객체를 호출해도 되는가
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
 
     }
 }
