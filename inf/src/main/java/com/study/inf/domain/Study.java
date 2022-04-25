@@ -51,7 +51,7 @@ public class Study {
     private Set<Tag> tags = new HashSet<>();
     
     @ManyToMany
-    private Set<Zone> zones = new HashSet<>();;
+    private Set<Zone> zones = new HashSet<>();
 
     private LocalDateTime publishedDateTime;
 
@@ -66,6 +66,10 @@ public class Study {
     private boolean closed;
 
     private boolean useBanner;
+
+    public void addManager(Account account) {
+        this.managers.add(account);
+    }
 
     
 }
