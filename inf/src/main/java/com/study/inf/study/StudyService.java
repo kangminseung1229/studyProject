@@ -1,7 +1,5 @@
 package com.study.inf.study;
 
-import javax.websocket.server.ServerEndpoint;
-
 import com.study.inf.domain.Account;
 import com.study.inf.domain.Study;
 
@@ -15,14 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudyService {
 
-    private final StudyRepository studyRepository;
+    private final StudyRepository repository;
 
     public Study createNewStudy(Study study, Account account) {
-
-        Study newStudy = studyRepository.save(study);
-
-        study.addManager(account);
-        return null;
+        Study newStudy = repository.save(study);
+        newStudy.addManager(account);
+        return newStudy;
     }
 
 
