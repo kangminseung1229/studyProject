@@ -55,9 +55,10 @@ public class studyController {
     }
 
     @PostMapping("/new-study")
-    public String newStudySumbit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors){
+    public String newStudySumbit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors, Model model){
 
         if (errors.hasErrors()) {
+            model.addAttribute(account);
             return "study/form";
         }
 
@@ -66,7 +67,12 @@ public class studyController {
 
     }
 
-    
+    @GetMapping("/study/{path}/members")
+    public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model){
+        model.addAttribute(account);
+        model.addAttribute(studyRepository.findByPath(path));
+        return "study/members";
+    }
 
 
     
