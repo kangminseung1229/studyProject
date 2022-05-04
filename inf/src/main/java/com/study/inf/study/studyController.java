@@ -25,38 +25,27 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class studyController {
+public class StudyController {
 
     private final StudyRepository studyRepository;
     private final StudyService studyService;
     private final ModelMapper modelMapper;
-    private final StudyFormVaildator studyFormVaildator;
-
+    private final StudyFormVaildator studyFormValidator;
 
     @InitBinder("studyForm")
-    public void studyforminitbinder(WebDataBinder webDataBinder){
-        webDataBinder.addValidators(studyFormVaildator);
+    public void studyFormInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(studyFormValidator);
     }
 
     @GetMapping("/new-study")
-    public String newStudyForm(@CurrentAccount Account account, Model model){
+    public String newStudyForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(new StudyForm());
-
         return "study/form";
-    }   
-
-    @GetMapping("/study/{path}")
-    public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model){
-        model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath (path));
-        return "study/view";
-
     }
 
     @PostMapping("/new-study")
-    public String newStudySumbit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors, Model model){
-
+    public String newStudySubmit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "study/form";
@@ -64,16 +53,23 @@ public class studyController {
 
         Study newStudy = studyService.createNewStudy(modelMapper.map(studyForm, Study.class), account);
         return "redirect:/study/" + URLEncoder.encode(newStudy.getPath(), StandardCharsets.UTF_8);
+    }
 
+    @GetMapping("/study/{path}")
+    public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "study/view";
     }
 
     @GetMapping("/study/{path}/members")
-    public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model){
+    public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
         model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
+        model.addAttribute(study);
         return "study/members";
     }
-
 
     
 }
