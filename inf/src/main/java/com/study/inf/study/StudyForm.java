@@ -1,10 +1,8 @@
 package com.study.inf.study;
 
-import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.annotations.Fetch;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
