@@ -19,13 +19,14 @@ import com.study.inf.domain.Zone;
 import com.study.inf.settings.forms.NicknameForm;
 import com.study.inf.settings.forms.Notifications;
 import com.study.inf.settings.forms.PasswordForm;
-import com.study.inf.settings.forms.TagForm;
 import com.study.inf.settings.validator.NicknameValidator;
 import com.study.inf.settings.validator.PasswordFormValidator;
 import com.study.inf.settings.validator.Profile;
+import com.study.inf.study.TagService;
+import com.study.inf.tag.TagForm;
 import com.study.inf.tag.TagRepository;
+import com.study.inf.zone.ZoneForm;
 import com.study.inf.zone.ZoneRepository;
-import com.study.inf.zone.form.ZoneForm;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +65,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
+    private final TagService tagService;
     private final TagRepository tagRepository;
     private final ZoneRepository zoneRepository;
     private final ObjectMapper objectMapper;
@@ -133,7 +135,7 @@ public class SettingsController {
             return SETTINGS + NOTIFICATIONS;
         }
 
-        accountService.updateNotification(account, notifications);
+        accountService.updateNotifications(account, notifications);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
         return "redirect:/" + SETTINGS + NOTIFICATIONS;
     }
@@ -154,12 +156,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(title);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(title).build());
-        }
-
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
@@ -233,4 +230,5 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
         return "redirect:/" + SETTINGS + ACCOUNT;
     }
+
 }

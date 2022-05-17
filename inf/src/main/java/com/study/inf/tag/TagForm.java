@@ -1,4 +1,4 @@
-package com.study.inf.settings.forms;
+package com.study.inf.tag;
 
 import lombok.Data;
 

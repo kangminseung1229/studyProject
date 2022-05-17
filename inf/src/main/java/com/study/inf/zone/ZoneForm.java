@@ -1,4 +1,4 @@
-package com.study.inf.zone.form;
+package com.study.inf.zone;
 
 import com.study.inf.domain.Zone;
 

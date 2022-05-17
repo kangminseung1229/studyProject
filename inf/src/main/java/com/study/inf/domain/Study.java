@@ -29,6 +29,12 @@ import lombok.Setter;
         @NamedAttributeNode("zones"),
         @NamedAttributeNode("managers"),
         @NamedAttributeNode("members") })
+@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers") })
+@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers") })
 @Entity
 @Getter
 @Setter
@@ -89,8 +95,9 @@ public class Study {
 
     public boolean isJoinable(UserAccount userAccount) {
         Account account = userAccount.getAccount();
-        return this.isPublished() && this.isRecruiting() && !this.members.contains(account)
-                && !this.managers.contains(account);
+        return this.isPublished() && this.isRecruiting()
+                && !this.members.contains(account) && !this.managers.contains(account);
+
     }
 
     public boolean isMember(UserAccount userAccount) {
@@ -101,8 +108,11 @@ public class Study {
         return this.managers.contains(userAccount.getAccount());
     }
 
+    public void addMemeber(Account account) {
+        this.members.add(account);
+    }
+
     public String getImage() {
         return image != null ? image : "/images/default_banner.png";
     }
-
 }

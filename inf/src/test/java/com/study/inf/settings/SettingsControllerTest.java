@@ -29,10 +29,10 @@ import com.study.inf.account.AccountService;
 import com.study.inf.domain.Account;
 import com.study.inf.domain.Tag;
 import com.study.inf.domain.Zone;
-import com.study.inf.settings.forms.TagForm;
+import com.study.inf.tag.TagForm;
 import com.study.inf.tag.TagRepository;
+import com.study.inf.zone.ZoneForm;
 import com.study.inf.zone.ZoneRepository;
-import com.study.inf.zone.form.ZoneForm;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,16 +43,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
-@ActiveProfiles("dev")
-public class SettingsControllerTest {
+class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired AccountRepository accountRepository;
@@ -84,7 +81,6 @@ public class SettingsControllerTest {
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("whitelist"))
                 .andExpect(model().attributeExists("zones"));
-
     }
 
     @WithAccount("keesun")
