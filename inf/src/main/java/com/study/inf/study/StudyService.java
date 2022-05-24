@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.agent.VirtualMachine.ForHotSpot.Connection.Response;
 
 @Service
 @Transactional
@@ -72,14 +73,14 @@ public class StudyService {
     }
 
     public Study getStudyToUpdateTag(Account account, String path) {
-        Study study = repository.findAccountWithTagsByPath(path);
+        Study study = repository.findStudyWithTagsByPath(path);
         checkIfExistingStudy(path, study);
         checkIfManager(account, study);
         return study;
     }
 
     public Study getStudyToUpdateZone(Account account, String path) {
-        Study study = repository.findAccountWithZonesByPath(path);
+        Study study = repository.findStudyWithZonesByPath(path);
         checkIfExistingStudy(path, study);
         checkIfManager(account, study);
         return study;
@@ -121,5 +122,12 @@ public class StudyService {
         study.stopRecruit();
     }
 
+    public void remove(Study study){
+        if (study.isRemovable()){
+            repository.delete(study);
+        } else{
+            throw new IllegalArgumentException("스터디를 삭제할 수 없습니다.");
+        }
+    }
 
 }
