@@ -86,7 +86,6 @@ public class StudyService {
         return study;
     }
 
-
     public Study getStudyToUpdateStatus(Account account, String path) {
         Study study = repository.findStudyWithManagersByPath(path);
         checkIfExistingStudy(path, study);
@@ -122,12 +121,20 @@ public class StudyService {
         study.stopRecruit();
     }
 
-    public void remove(Study study){
-        if (study.isRemovable()){
+    public void remove(Study study) {
+        if (study.isRemovable()) {
             repository.delete(study);
-        } else{
+        } else {
             throw new IllegalArgumentException("스터디를 삭제할 수 없습니다.");
         }
+    }
+
+    public void addMember(Study study, Account account) {
+        study.addMember(account);
+    }
+
+    public void removeMember(Study study, Account account) {
+        study.removeMember(account);
     }
 
 }
