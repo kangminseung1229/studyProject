@@ -1,7 +1,5 @@
 package com.study.inf.domain;
 
-import static org.mockito.ArgumentMatchers.nullable;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +24,6 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 public class Event {
-
     @Id
     @GeneratedValue
     private Long id;
@@ -34,13 +31,18 @@ public class Event {
     @ManyToOne
     private Study study;
 
+    @ManyToOne
+    private Account createBy;
+
+    @Column(nullable = false)
     private String title;
 
     @Lob
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime creaDateTime;
+    private LocalDateTime createdDateTime;
+
     @Column(nullable = false)
     private LocalDateTime endEnrollmentDateTime;
 
@@ -51,7 +53,7 @@ public class Event {
     private LocalDateTime endDateTime;
 
     @Column
-    private Integer limitOfEnrollments; // null 허용하는 integer
+    private Integer limitOfEnrollments;
 
     @OneToMany(mappedBy = "event")
     private List<Enrollment> enrollments;
