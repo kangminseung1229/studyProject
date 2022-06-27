@@ -28,20 +28,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EventController {
 
-
     private final StudyService studyService;
     private final EventService eventService;
     private final ModelMapper modelMapper;
     private final Eventvalidator eventvalidator;
+    private final EventRepository eventRepository;
 
     @InitBinder("eventForm")
-    public void initBinder(WebDataBinder WebDataBinder){
+    public void initBinder(WebDataBinder WebDataBinder) {
         WebDataBinder.addValidators(eventvalidator);
     }
 
-
     @GetMapping("/new-event")
-    public String newEventForm(@CurrentAccount Account account, @PathVariable String path, Model model){
+    public String newEventForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
 
         Study study = studyService.getStudyToUpdateStatus(account, path);
         model.addAttribute(study);
@@ -49,28 +48,33 @@ public class EventController {
         model.addAttribute(new EventForm());
         return "event/form";
 
-        
     }
 
-
     @PostMapping("/new-event")
-    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path, @Valid EventForm eventForm, Errors erros, Model model ){
+    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path, @Valid EventForm eventForm,
+            Errors erros, Model model) {
 
         Study study = studyService.getStudyToUpdateStatus(account, path);
 
         if (erros.hasErrors()) {
             model.addAttribute(account);
             model.addAttribute(study);
-            
+
             return "event/form";
         }
 
         Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), study, account);
-        return "redirect:/study/" +study.getEncodedPath() + "/events/" + event.getId();
-        
-
+        return "redirect:/study/" + study.getEncodedPath() + "/events/" + event.getId();
 
     }
-    
-    
+
+    @GetMapping("/events/{id}")
+    public String getEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
+            Model model) {
+        model.addAttribute(account);
+        model.addAttribute(eventRepository.findById(id).orElseThrow());
+        model.addAttribute(studyService.getStudy(path));
+        return "event/view";
+    }
+
 }

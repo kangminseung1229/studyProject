@@ -28,7 +28,7 @@ public class Enrollment {
     private LocalDateTime enrolledAt;
 
     private boolean accepted;
-    private boolean attented;
+    private boolean attended;
 
 
 }
