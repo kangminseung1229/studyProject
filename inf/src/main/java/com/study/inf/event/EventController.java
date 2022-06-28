@@ -1,5 +1,9 @@
 package com.study.inf.event;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -19,6 +23,7 @@ import com.study.inf.domain.Event;
 import com.study.inf.domain.Study;
 import com.study.inf.event.form.EventForm;
 import com.study.inf.event.validator.Eventvalidator;
+import com.study.inf.study.StudyRepository;
 import com.study.inf.study.StudyService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +38,7 @@ public class EventController {
     private final ModelMapper modelMapper;
     private final Eventvalidator eventvalidator;
     private final EventRepository eventRepository;
+    private final StudyRepository studyRepository;
 
     @InitBinder("eventForm")
     public void initBinder(WebDataBinder WebDataBinder) {
@@ -73,8 +79,31 @@ public class EventController {
             Model model) {
         model.addAttribute(account);
         model.addAttribute(eventRepository.findById(id).orElseThrow());
-        model.addAttribute(studyService.getStudy(path));
+        model.addAttribute(studyRepository.findStudyWithManagersByPath(path));
         return "event/view";
+    }
+
+    @GetMapping("/events")
+    public String viewStudyEvents(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+
+        List<Event> events = eventRepository.findByStudyOrderByStartDateTime(study);
+        List<Event> newEvents = new ArrayList<>();
+        List<Event> oldEvents = new ArrayList<>();
+        events.forEach(e -> {
+            if (e.getEndDateTime().isBefore(LocalDateTime.now())) {
+                oldEvents.add(e);
+            } else {
+                newEvents.add(e);
+            }
+        });
+
+        model.addAttribute("newEvents", newEvents);
+        model.addAttribute("oldEvents", oldEvents);
+
+        return "study/events";
     }
 
 }
