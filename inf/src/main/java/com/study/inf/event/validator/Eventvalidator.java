@@ -2,10 +2,13 @@ package com.study.inf.event.validator;
 
 import java.time.LocalDateTime;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.study.inf.domain.Event;
 import com.study.inf.event.form.EventForm;
 
 
@@ -48,6 +51,12 @@ public class Eventvalidator implements Validator {
         LocalDateTime endDateTime = eventForm.getEndDateTime();
         return endDateTime.isBefore(eventForm.getStartDateTime())
                 || endDateTime.isBefore(eventForm.getEndEnrollmentDateTime());
+    }
+
+    public void validateUpdateForm(@Valid EventForm eventForm, Event event, Errors errors) {
+        if (eventForm.getLimitOfEnrollments() < event.getNumberOfAcceptedEnrollments()) {
+            errors.rejectValue("limitOfEnrollments", "wrong.value", "확인된 참기 신청보다 모집 인원 수가 커야 합니다.");
+        }
     }
 
 }

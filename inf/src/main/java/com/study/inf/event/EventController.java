@@ -36,13 +36,13 @@ public class EventController {
     private final StudyService studyService;
     private final EventService eventService;
     private final ModelMapper modelMapper;
-    private final Eventvalidator eventvalidator;
+    private final Eventvalidator eventValidator;
     private final EventRepository eventRepository;
     private final StudyRepository studyRepository;
 
     @InitBinder("eventForm")
     public void initBinder(WebDataBinder WebDataBinder) {
-        WebDataBinder.addValidators(eventvalidator);
+        WebDataBinder.addValidators(eventValidator);
     }
 
     @GetMapping("/new-event")
@@ -104,6 +104,38 @@ public class EventController {
         model.addAttribute("oldEvents", oldEvents);
 
         return "study/events";
+    }
+
+    @GetMapping("/events/{id}/edit")
+    public String updateEventForm(@CurrentAccount Account account,
+            @PathVariable String path, @PathVariable Long id, Model model) {
+        Study study = studyService.getStudyToUpdate(account, path);
+        Event event = eventRepository.findById(id).orElseThrow();
+        model.addAttribute(study);
+        model.addAttribute(account);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+        return "event/update-form";
+    }
+
+    @PostMapping("/events/{id}/edit")
+    public String updateEventSubmit(@CurrentAccount Account account, @PathVariable String path,
+            @PathVariable Long id, @Valid EventForm eventForm, Errors errors,
+            Model model) {
+        Study study = studyService.getStudyToUpdate(account, path);
+        Event event = eventRepository.findById(id).orElseThrow();
+        eventForm.setEventType(event.getEventType());
+        eventValidator.validateUpdateForm(eventForm, event, errors);
+
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            model.addAttribute(study);
+            model.addAttribute(event);
+            return "event/update-form";
+        }
+
+        eventService.updateEvent(event, eventForm);
+        return "redirect:/study/" + study.getEncodedPath() + "/events/" + event.getId();
     }
 
 }
