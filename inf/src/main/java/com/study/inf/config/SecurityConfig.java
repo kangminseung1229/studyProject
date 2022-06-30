@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  * SecurityConfig
  */
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
