@@ -13,7 +13,7 @@ import com.study.inf.event.form.EventForm;
 
 
 @Component
-public class Eventvalidator implements Validator {
+public class EventValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
