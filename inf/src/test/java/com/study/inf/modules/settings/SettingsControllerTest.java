@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.inf.infra.MockMvcTest;
 import com.study.inf.modules.account.Account;
 import com.study.inf.modules.account.AccountRepository;
 import com.study.inf.modules.account.AccountService;
@@ -46,9 +47,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;

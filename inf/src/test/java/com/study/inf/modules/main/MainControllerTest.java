@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.study.inf.infra.MockMvcTest;
 import com.study.inf.modules.account.AccountRepository;
 import com.study.inf.modules.account.AccountService;
 import com.study.inf.modules.account.form.SignUpForm;
@@ -22,8 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 public class MainControllerTest {
 
     @Autowired

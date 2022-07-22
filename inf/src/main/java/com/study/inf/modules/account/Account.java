@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 
-import com.study.inf.modules.study.Study;
 import com.study.inf.modules.tag.Tag;
 import com.study.inf.modules.zone.Zone;
 

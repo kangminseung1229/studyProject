@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.study.inf.infra.MockMvcTest;
 import com.study.inf.infra.mail.EmailMessage;
 import com.study.inf.infra.mail.EmailService;
 
@@ -27,17 +28,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+
+
+@MockMvcTest
 @ActiveProfiles("dev")
 public class AccountControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @MockBean
     EmailService emailService;
