@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.inf.infra.AbstractContainerBaseTest;
 import com.study.inf.infra.MockMvcTest;
 import com.study.inf.modules.account.Account;
 import com.study.inf.modules.account.AccountRepository;
@@ -48,7 +49,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @MockMvcTest
-class SettingsControllerTest {
+class SettingsControllerTest extends AbstractContainerBaseTest{
 
     @Autowired MockMvc mockMvc;
     @Autowired AccountRepository accountRepository;

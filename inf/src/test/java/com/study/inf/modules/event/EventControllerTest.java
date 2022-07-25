@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.study.inf.infra.AbstractContainerBaseTest;
 import com.study.inf.infra.MockMvcTest;
 import com.study.inf.modules.account.Account;
 import com.study.inf.modules.account.AccountFactory;
@@ -25,7 +26,7 @@ import com.study.inf.modules.study.StudyFactory;
 
 
 @MockMvcTest
-class EventControllerTest {
+class EventControllerTest extends AbstractContainerBaseTest{
 
     @Autowired MockMvc mockMvc;
     @Autowired StudyFactory studyFactory;

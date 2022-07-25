@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.study.inf.infra.AbstractContainerBaseTest;
 import com.study.inf.infra.MockMvcTest;
 import com.study.inf.modules.account.AccountRepository;
 import com.study.inf.modules.account.AccountService;
@@ -24,7 +25,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 
 @MockMvcTest
-public class MainControllerTest {
+public class MainControllerTest extends AbstractContainerBaseTest{
 
     @Autowired
     MockMvc mockMvc; // Junit5 가 먼저 생성자에 개입하기 때문에 @RequiredArgsConstructor 를 통한 의존성 주입이 안된다.
