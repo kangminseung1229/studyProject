@@ -3,9 +3,11 @@ package com.study.inf.modules.study;
 import com.study.inf.modules.account.Account;
 import com.study.inf.modules.tag.Tag;
 import com.study.inf.modules.zone.Zone;
+import com.study.inf.modules.study.event.StudyCreatedEvent;
 import com.study.inf.modules.study.form.StudyDescriptionForm;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +21,12 @@ public class StudyService {
 
     private final StudyRepository repository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = repository.save(study);
         newStudy.addManager(account);
+        eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
         return newStudy;
     }
 
